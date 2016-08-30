@@ -403,7 +403,7 @@ function _str(t::Term; latex::Bool=false)
 end
 
 #function _str{K<:Field,N}(tt::PolyAsArray{K,N}; latex::Bool=false)    
-function _str{K<:Field,N}(tt::Array{MyPolynomials.Term{K,N},1}; latex::Bool=false)
+function _str{K<:Field,N}(tt::Array{Term{K,N},1}; latex::Bool=false)
 #function _str(tt::PolyAsArray; latex::Bool=false)    
     if length(tt)==0
         return "0"
