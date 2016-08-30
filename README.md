@@ -3,5 +3,5 @@
 ##Installation
 In a Julia notebook type
 ```julia
-Pkg.clone("https://github.com/HaraldHofstaetter/MultPolynomials.jl")
+Pkg.clone("https://github.com/HaraldHofstaetter/MultiPolynomials.jl")
 ```
