@@ -1,14 +1,14 @@
 module MultiPolynomials
 
 import 
-Base: (*), /, ^, +, -, <, >, rem, divrem, isless, lexless, string, show, write, writemime
+Base: (*), /, ^, +, -, <, >, rem, divrem, diff, isless, lexless, string, show, write, writemime
 
 export Field, Index, Term, Polynomial, PolyAsArray, @variables
 export terms, polynomial, coeff, deg, index, divides
 export grlexless, grevlexless
 export set_order_lex, set_order_grlex, set_order_grevlex
 export LT, LC, LM, multidegree
-export divrem, LCM, S_polynomial, groebner
+export LCM, S_polynomial, groebner
 
 typealias Field Number
 
@@ -471,6 +471,34 @@ writemime(io::IO, ::MIME"text/latex",  f::Polynomial) = write(io, "\$", _str(f, 
 
 writemime(io::IO, ::MIME"application/x-latex", q::Rational) = write(io, "\$", _str(q, latex=true), "\$")
 writemime(io::IO, ::MIME"text/latex",  q::Rational) = write(io, "\$", _str(q, latex=true), "\$")
+
+function diff{K<:Field,N}(t::Term{K,N}, k::Int)
+    if t.index[k] > 0
+        i = [t.index...]
+        i[k] -= 1
+        return Term{K,N}((i...), t.index[k]*t.coefficient)
+    else
+        return zero(K)
+    end
+end
+
+function diff{K<:Field,N}(t::Term{K,N}, v::Term{K,N}) 
+    @assert sum(v.index)==1 
+    diff(t, findfirst(v.index,1))
+end
+
+function diff{K<:Field,N}(f::Polynomial{K,N}, k::Int)
+    r = Polynomial{K,N}()
+    for (i,c) in f
+        r = r + diff(Term{K,N}(i,c), k)
+    end
+    r	
+end
+
+function diff{K<:Field,N}(f::Polynomial{K,N}, v::Term{K,N})
+    @assert sum(v.index)==1 
+    diff(f, findfirst(v.index,1))
+end
 
 function divrem{K<:Field,N}(f::Polynomial{K,N}, ff::Polynomial{K,N} ...)
     # Algorithm from Theorem 2.3 in 
