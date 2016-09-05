@@ -4,7 +4,7 @@ import
 Base: (*), /, ^, +, -, <, >, rem, divrem, diff, isless, lexless, string, show, write, writemime
 
 export Field, Index, Term, Polynomial, PolyAsArray, @variables
-export terms, polynomial, coeff, deg, index, divides
+export terms, polynomial, coeff, deg, index, divides, evaluate
 export grlexless, grevlexless
 export set_order_lex, set_order_grlex, set_order_grevlex
 export LT, LC, LM, multidegree
@@ -471,6 +471,9 @@ writemime(io::IO, ::MIME"text/latex",  f::Polynomial) = write(io, "\$", _str(f, 
 
 writemime(io::IO, ::MIME"application/x-latex", q::Rational) = write(io, "\$", _str(q, latex=true), "\$")
 writemime(io::IO, ::MIME"text/latex",  q::Rational) = write(io, "\$", _str(q, latex=true), "\$")
+
+evaluate{K<:Field,N}(t::Term{K,N}, x) = t.coefficient * prod([x[k]^t.index[k] for k=1:N])
+evaluate{K<:Field,N}(f::Polynomial{K,N}, x) = sum([evaluate(t, x) for t in terms(f)])
 
 function diff{K<:Field,N}(t::Term{K,N}, k::Int)
     if t.index[k] > 0
