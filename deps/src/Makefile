@@ -1,7 +1,7 @@
 all: call_fgb
 
-#CFLAGS = -g
 CFLAGS = -g
+#CFLAGS = -g
 CC = gcc $(CFLAGS)
 CPP = g++ $(CFLAGS)
 
@@ -15,5 +15,4 @@ call_fgb.o: call_fgb.c
 
 call_fgb: call_fgb.o
 	$(CPP)  -o $@ call_fgb.o  -L$(LIBDIR) -lfgb -lfgbexp -lgb -lgbexp -lminpoly -lminpolyvgf -lgmp  -lm -fopenmp
-
 
