@@ -6,6 +6,7 @@ My own multivariable polynomials package for Julia, including an implementation 
 In a Julia notebook type
 ```julia
 Pkg.clone("https://github.com/HaraldHofstaetter/MultiPolynomials.jl")
+Pkg.build("MultiPolynomials")
 ```
 ##Examples
 To get easy access to the examples, copy them into the home directory:
