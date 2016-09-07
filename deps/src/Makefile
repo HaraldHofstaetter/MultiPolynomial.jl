@@ -1,7 +1,7 @@
 all: call_fgb
 
-CFLAGS = 
-#CFLAGS = -g
+#CFLAGS = 
+CFLAGS = -g
 CC = gcc $(CFLAGS)
 CPP = g++ $(CFLAGS)
 

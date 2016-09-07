@@ -47,7 +47,7 @@ int main(int argc,char**argv)
     {
         int c;
         opterr = 0;
-        while ((c = getopt (argc, argv, "tkcoemv")) != -1)
+        while ((c = getopt (argc, argv, "t:k:c:o:n:e:m:")) != -1)
             switch (c)
             {
             case 't':
