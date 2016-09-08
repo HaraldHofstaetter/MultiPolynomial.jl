@@ -1,6 +1,6 @@
 # MultiPolynomials
 
-My own multivariable polynomials package for Julia.
+My own multivariate polynomials package for Julia.
 
 A reference implementation (not very efficient) of [Buchberger's algorithm](https://en.wikipedia.org/wiki/Buchberger%27s_algorithm) for computing [Gröbner bases](https://en.wikipedia.org/wiki/Gr%C3%B6bner_basis) is included. But there is also an interface to the
 highly efficient [FGb library](http://www-polsys.lip6.fr/~jcf/FGb/index.html), see the example below.
