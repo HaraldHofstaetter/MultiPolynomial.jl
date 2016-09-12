@@ -7,6 +7,7 @@ export Field, Index, Term, Polynomial, PolyAsArray, @variables
 export terms, polynomial, coeff, deg, index, divides, evaluate
 export grlexless, grevlexless
 export set_order_lex, set_order_grlex, set_order_grevlex
+export grevlexelimless, set_order_grevlexelimless
 export LT, LC, LM, multidegree
 export LCM, S_polynomial, groebner 
 export groebner_fgb, call_fgb

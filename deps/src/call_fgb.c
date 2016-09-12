@@ -83,7 +83,7 @@ int main(int argc,char**argv)
             ;
          }
     }
-#if 0    
+#if 1    
     fprintf(stderr, "Options:\n");
     fprintf(stderr, "-t n_threads %i\n", n_threads);
     fprintf(stderr, "-k k2_dlr %u\n", k2_dlr);

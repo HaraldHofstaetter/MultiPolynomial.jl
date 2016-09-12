@@ -20,6 +20,7 @@ grevlexless{K<:Field,N}(t1::Term{K,N}, t2::Term{K,N}) = grevlex(t1.index, t2.ind
 
 _order = lexless
 
+
 function set_order_lex()
     global _order = lexless
 end
@@ -30,6 +31,19 @@ end
 
 function set_order_grevlex()
     global _order = grevlexless
+end
+
+_grevlexelim_l = 0
+function grevlexelimless{N}(i1::Index{N}, i2::Index{N}) 
+    d1 = sum(i1[1:_grevlexelim_l])
+    d2 = sum(i2[1:_grevlexelim_l])
+    (d1<d2) || ((d1==d2) && grevlexless(i1, i2))
+end
+grevlexelimless{K<:Field,N}(t1::Term{K,N}, t2::Term{K,N}) = grevlexelimless(t1.index, t2.index)
+
+function set_order_grevlexelimless(l)
+    global _order = grevlexelimless
+    global _grevlexelim_l = l
 end
 
 isless{K<:Field,N}(t1::Term{K,N}, t2::Term{K,N}) = _order(t1.index, t2.index)

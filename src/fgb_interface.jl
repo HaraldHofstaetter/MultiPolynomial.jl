@@ -103,15 +103,21 @@ end
 
 function fgb_qbasis{K<:Field, N}(F::Array{Polynomial{K,N},1}, 
                                  vars1::Vector, 
-                                 vars2::Vector)
+                                 vars2::Vector;
+                                 n_threads::Integer=1,
+                                 n_output_max::Integer=100000,
+                                 index::Integer=1000000)
     (k, perm) = _adapt_vars_args(vars1, vars2)
-    call_fgb(F; perm=perm, k_elim=k) 
+    call_fgb(F; perm=perm, k_elim=k, n_threads=n_threads, n_output_max=n_output_max, index=index) 
 end 
 
 function fgb_qbasis_elim{K<:Field, N}(F::Array{Polynomial{K,N},1}, 
                                  vars1::Vector, 
-                                 vars2::Vector)
+                                 vars2::Vector;
+                                 n_threads::Integer=1,
+                                 n_output_max::Integer=100000,
+                                 index::Integer=1000000)
     (k, perm) = _adapt_vars_args(vars1, vars2)
-    call_fgb(F; perm=perm, k_elim=k, force_elim=true) 
+    call_fgb(F; perm=perm, k_elim=k, force_elim=true, n_threads=n_threads, n_output_max=n_output_max, index=index)
 end    
 
