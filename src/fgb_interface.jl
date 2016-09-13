@@ -49,6 +49,7 @@ end
 
 function call_fgb{K<:Field, N}(F::Array{Polynomial{K,N},1};
               perm=collect(1:N),
+              verbose::Bool=false,
               n_threads::Integer=1,
               k_elim::Integer=0,
               compute::Integer=1,
@@ -64,7 +65,8 @@ function call_fgb{K<:Field, N}(F::Array{Polynomial{K,N},1};
     @assert index>0
     @assert length(perm)==N && sort(perm)==collect(1:N)
 
-    opt = [string("-t", n_threads),
+    opt = [string("-v", verbose?1:0),
+           string("-t", n_threads),
            string("-k", k_elim),
            string("-o", n_output_max),
            string("-c", compute),
@@ -104,20 +106,24 @@ end
 function fgb_qbasis{K<:Field, N}(F::Array{Polynomial{K,N},1}, 
                                  vars1::Vector, 
                                  vars2::Vector;
+                                 verbose::Bool=false,
                                  n_threads::Integer=1,
                                  n_output_max::Integer=100000,
                                  index::Integer=1000000)
     (k, perm) = _adapt_vars_args(vars1, vars2)
-    call_fgb(F; perm=perm, k_elim=k, n_threads=n_threads, n_output_max=n_output_max, index=index) 
+    call_fgb(F; perm=perm, k_elim=k, verbose=verbose, 
+             n_threads=n_threads, n_output_max=n_output_max, index=index) 
 end 
 
 function fgb_qbasis_elim{K<:Field, N}(F::Array{Polynomial{K,N},1}, 
                                  vars1::Vector, 
                                  vars2::Vector;
+                                 verbose::Bool=false,
                                  n_threads::Integer=1,
                                  n_output_max::Integer=100000,
                                  index::Integer=1000000)
     (k, perm) = _adapt_vars_args(vars1, vars2)
-    call_fgb(F; perm=perm, k_elim=k, force_elim=true, n_threads=n_threads, n_output_max=n_output_max, index=index)
+    call_fgb(F; perm=perm, k_elim=k, force_elim=true, verbose=verbose, 
+             n_threads=n_threads, n_output_max=n_output_max, index=index)
 end    
 

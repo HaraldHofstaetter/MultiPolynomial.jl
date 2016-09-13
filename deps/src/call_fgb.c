@@ -47,7 +47,7 @@ int main(int argc,char**argv)
     {
         int c;
         opterr = 0;
-        while ((c = getopt (argc, argv, "t:k:c:o:n:e:m:")) != -1)
+        while ((c = getopt (argc, argv, "t:k:c:o:n:e:m:v:")) != -1)
             switch (c)
             {
             case 't':
@@ -72,10 +72,9 @@ int main(int argc,char**argv)
             case 'm':
                  sscanf(optarg, "%u", &options._env._index);
                  break;
-     /*     case 'v':
+           case 'v':
                  sscanf(optarg, "%d", &options._verb);
                  break;
-      */
             case 'e':
                  sscanf(optarg, "%d", &options._env._force_elim);
                  break;
@@ -83,15 +82,17 @@ int main(int argc,char**argv)
             ;
          }
     }
-#if 1    
-    fprintf(stderr, "Options:\n");
-    fprintf(stderr, "-t n_threads %i\n", n_threads);
-    fprintf(stderr, "-k k2_dlr %u\n", k2_dlr);
-    fprintf(stderr, "-o n_output_max %u\n", n_output_max);
-    fprintf(stderr, "-c options._env._compute %i\n", options._env._compute);
-    fprintf(stderr, "-n options._env._nb %i\n", options._env._nb);
-    fprintf(stderr, "-m options._env._index %u\n", options._env._index);
-    fprintf(stderr, "-e options._env._force_elim %i\n", options._env._force_elim);
+#if 1  
+    if (options._verb) {  
+        fprintf(stderr, "Options:\n");
+        fprintf(stderr, "-t n_threads %i\n", n_threads);
+        fprintf(stderr, "-k k2_dlr %u\n", k2_dlr);
+        fprintf(stderr, "-o n_output_max %u\n", n_output_max);
+        fprintf(stderr, "-c options._env._compute %i\n", options._env._compute);
+        fprintf(stderr, "-n options._env._nb %i\n", options._env._nb);
+        fprintf(stderr, "-m options._env._index %u\n", options._env._index);
+        fprintf(stderr, "-e options._env._force_elim %i\n", options._env._force_elim);
+    }
 #endif
 
     FGB(saveptr)(); /* First thing to do : GMP origmal memory allocators are saved */
