@@ -1,4 +1,4 @@
-function _write_fgb_input{K<:Field, N}(si, F::Array{Polynomial{K,N},1}; perm=1:N)
+function _write_input{K<:Field, N}(si, F::Array{Polynomial{K,N},1}; perm=1:N)
     println(si, N, " ", length(F))
     for f in F
         println(si, length(f))
@@ -12,7 +12,7 @@ function _write_fgb_input{K<:Field, N}(si, F::Array{Polynomial{K,N},1}; perm=1:N
     end    
 end
 
-function _read_fgb_output(so, K::DataType; perm=nothing)
+function _read_output(so, K::DataType; perm=nothing)
     N = parse(Int, readuntil(so,' '))
     if perm==nothing
         perm=1:N
@@ -36,9 +36,9 @@ function groebner_fgb{K<:Field, N}(F::Polynomial{K,N} ...)
                "..", "deps", "bin", "call_fgb")
     (so,si,pr) = readandwrite(`$call_fgb`)
 
-    _write_fgb_input(si, [F...])
+    _write_input(si, [F...])
 
-    G = _read_fgb_output(so, K)
+    G = _read_output(so, K)
 
     close(so)
     close(si)
@@ -79,9 +79,9 @@ function call_fgb{K<:Field, N}(F::Array{Polynomial{K,N},1};
 
     (so,si,pr) = readandwrite(cmd)
 
-    _write_fgb_input(si, F; perm=perm)
+    _write_input(si, F; perm=perm)
 
-    G = _read_fgb_output(so, K; perm=perm)
+    G = _read_output(so, K; perm=perm)
 
     close(so)
     close(si)
@@ -103,7 +103,7 @@ function _adapt_vars_args(vars1::Vector, vars2::Vector)
 end
 
 
-function fgb_qbasis{K<:Field, N}(F::Array{Polynomial{K,N},1}, 
+function fgb_gbasis{K<:Field, N}(F::Array{Polynomial{K,N},1}, 
                                  vars1::Vector, 
                                  vars2::Vector;
                                  verbose::Integer=0,
@@ -115,7 +115,7 @@ function fgb_qbasis{K<:Field, N}(F::Array{Polynomial{K,N},1},
              n_threads=n_threads, n_output_max=n_output_max, index=index) 
 end 
 
-function fgb_qbasis_elim{K<:Field, N}(F::Array{Polynomial{K,N},1}, 
+function fgb_gbasis_elim{K<:Field, N}(F::Array{Polynomial{K,N},1}, 
                                  vars1::Vector, 
                                  vars2::Vector;
                                  verbose::Integer=0,
@@ -126,4 +126,33 @@ function fgb_qbasis_elim{K<:Field, N}(F::Array{Polynomial{K,N},1},
     call_fgb(F; perm=perm, k_elim=k, force_elim=true, verbose=verbose, 
              n_threads=n_threads, n_output_max=n_output_max, index=index)
 end    
+
+
+
+function call_giac{K<:Field, N}(F::Array{Polynomial{K,N},1};
+              perm=collect(1:N))
+    @assert length(perm)==N && sort(perm)==collect(1:N)
+
+    call_giac = joinpath(dirname(@__FILE__),
+               "..", "deps", "bin", "call_giac")
+    cmd = `$call_giac`
+
+    (so,si,pr) = readandwrite(cmd)
+
+    _write_input(si, F; perm=perm)
+
+    G = _read_output(so, K; perm=perm)
+
+    close(so)
+    close(si)
+    close(pr) 
+
+    G
+end     
+
+
+function giac_gbasis{K<:Field, N}(F::Array{Polynomial{K,N},1}, vars::Vector) 
+    (k, perm) = _adapt_vars_args(vars, [])
+    call_giac(F; perm=perm)
+end 
 

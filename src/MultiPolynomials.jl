@@ -11,7 +11,8 @@ export grevlexelimless, set_order_grevlexelimless
 export LT, LC, LM, multidegree
 export LCM, S_polynomial, groebner 
 export groebner_fgb, call_fgb
-export fgb_qbasis, fgb_qbasis_elim
+export fgb_gbasis, fgb_gbasis_elim
+export call_giac, giac_gbasis
 
 typealias Field Number
 
@@ -466,7 +467,7 @@ end
 
 
 include("groebner_et_al.jl")
-include("fgb_interface.jl")
+include("interfaces.jl")
 
 
 end #MultiPolynomials

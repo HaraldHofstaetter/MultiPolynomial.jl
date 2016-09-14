@@ -12,7 +12,8 @@ if (!ispath("call_FGb"))
 end
 
 cd(joinpath(dirname(@__FILE__), "src"))
-run(`make`)
-
+run(`make call_fgb`)
 run(`mv call_fgb ../bin`)
 
+run(`make call_giac`)
+run(`mv call_giac ../bin`)
