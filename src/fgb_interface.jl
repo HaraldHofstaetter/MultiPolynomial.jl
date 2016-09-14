@@ -49,7 +49,7 @@ end
 
 function call_fgb{K<:Field, N}(F::Array{Polynomial{K,N},1};
               perm=collect(1:N),
-              verbose::Bool=false,
+              verbose::Integer=0,
               n_threads::Integer=1,
               k_elim::Integer=0,
               compute::Integer=1,
@@ -65,7 +65,7 @@ function call_fgb{K<:Field, N}(F::Array{Polynomial{K,N},1};
     @assert index>0
     @assert length(perm)==N && sort(perm)==collect(1:N)
 
-    opt = [string("-v", verbose?1:0),
+    opt = [string("-v", verbose),
            string("-t", n_threads),
            string("-k", k_elim),
            string("-o", n_output_max),
@@ -106,7 +106,7 @@ end
 function fgb_qbasis{K<:Field, N}(F::Array{Polynomial{K,N},1}, 
                                  vars1::Vector, 
                                  vars2::Vector;
-                                 verbose::Bool=false,
+                                 verbose::Integer=0,
                                  n_threads::Integer=1,
                                  n_output_max::Integer=100000,
                                  index::Integer=1000000)
@@ -118,7 +118,7 @@ end
 function fgb_qbasis_elim{K<:Field, N}(F::Array{Polynomial{K,N},1}, 
                                  vars1::Vector, 
                                  vars2::Vector;
-                                 verbose::Bool=false,
+                                 verbose::Integer=0,
                                  n_threads::Integer=1,
                                  n_output_max::Integer=100000,
                                  index::Integer=1000000)

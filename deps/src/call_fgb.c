@@ -85,6 +85,7 @@ int main(int argc,char**argv)
 #if 1  
     if (options._verb) {  
         fprintf(stderr, "Options:\n");
+        fprintf(stderr, "-v options._verb %i\n", options._verb);
         fprintf(stderr, "-t n_threads %i\n", n_threads);
         fprintf(stderr, "-k k2_dlr %u\n", k2_dlr);
         fprintf(stderr, "-o n_output_max %u\n", n_output_max);
