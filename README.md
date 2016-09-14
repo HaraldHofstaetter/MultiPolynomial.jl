@@ -2,8 +2,9 @@
 
 My own multivariate polynomials package for Julia.
 
-A reference implementation (not very efficient) of [Buchberger's algorithm](https://en.wikipedia.org/wiki/Buchberger%27s_algorithm) for computing [Gröbner bases](https://en.wikipedia.org/wiki/Gr%C3%B6bner_basis) is included. But there is also an interface to the
-highly efficient [FGb library](http://www-polsys.lip6.fr/~jcf/FGb/index.html), see the example below.
+A reference implementation (not very efficient) of [Buchberger's algorithm](https://en.wikipedia.org/wiki/Buchberger%27s_algorithm) for computing [Gröbner bases](https://en.wikipedia.org/wiki/Gr%C3%B6bner_basis) is included. But there are also  interfaces to the
+highly efficient [FGb](http://www-polsys.lip6.fr/~jcf/FGb/index.html)
+and [Giac](https://www-fourier.ujf-grenoble.fr/~parisse/giac.html) libraries, see the example below.
 
 ##Installation
 In a Julia notebook type
