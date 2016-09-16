@@ -130,12 +130,13 @@ end
 
 
 function call_giac{K<:Field, N}(F::Array{Polynomial{K,N},1};
-              perm=collect(1:N))
+              perm=collect(1:N), greduce::Bool=false)
     @assert length(perm)==N && sort(perm)==collect(1:N)
 
     call_giac = joinpath(dirname(@__FILE__),
                "..", "deps", "bin", "call_giac")
-    cmd = `$call_giac`
+    opt = [ string("-r", greduce?1:0)]               
+    cmd = `$call_giac $opt`
 
     (so,si,pr) = readandwrite(cmd)
 
@@ -154,5 +155,11 @@ end
 function giac_gbasis{K<:Field, N}(F::Array{Polynomial{K,N},1}, vars::Vector) 
     (k, perm) = _adapt_vars_args(vars, [])
     call_giac(F; perm=perm)
+end 
+
+
+function giac_greduce{K<:Field, N}(f::Polynomial{K,N}, G::Array{Polynomial{K,N},1}, vars::Vector) 
+    (k, perm) = _adapt_vars_args(vars, [])
+    call_giac(vcat(f, G); perm=perm, greduce=true)[1]
 end 
 

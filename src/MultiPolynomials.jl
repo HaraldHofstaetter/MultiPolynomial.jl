@@ -12,7 +12,7 @@ export LT, LC, LM, multidegree
 export LCM, S_polynomial, groebner 
 export groebner_fgb, call_fgb
 export fgb_gbasis, fgb_gbasis_elim
-export call_giac, giac_gbasis
+export call_giac, giac_gbasis, giac_greduce
 
 typealias Field Number
 

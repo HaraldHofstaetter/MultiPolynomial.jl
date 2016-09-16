@@ -18,7 +18,21 @@ int main(int argc,char**argv)
     int nb_mons;
     int p, m, v;
     mpz_t u;
+    int greduce = 0;
 
+    int c;
+    opterr = 0;
+    while ((c = getopt (argc, argv, "r:")) != -1)
+        switch (c)
+        {
+        case 'r':
+            sscanf(optarg, "%d", &greduce);
+            break;
+        default:
+        ;
+    }
+
+    
     scanf("%d", &nb_vars);
     scanf("%d", &n_input);
 
@@ -72,18 +86,38 @@ int main(int argc,char**argv)
 #endif
     }
 
+
     vecteur input_sym;
-    for (p=0; p<n_input; p++) {
+
+    vecteur args;
+    if (greduce>=1) {
+        gen F = r2sym(input_basis[0], variables, 0);
+        args.push_back(F);
+        p = 1;
+    } 
+    else {
+        p = 0;
+    }
+
+    for (; p<n_input; p++) {
         gen s = r2sym(input_basis[p], variables, 0);
         input_sym.push_back(s);
     }    
 
-    vecteur args;
     args.push_back(gen(input_sym));
     args.push_back(gen(variables));
-
-    gen output_sym = _gbasis(args, 0);
-    vecteur *output_vec = output_sym.ref_VECTptr(); 
+   
+    vecteur *output_vec;
+    gen output_sym;
+    if (greduce>=1) {
+        output_sym = _greduce(args, 0);
+        n_output = 1;
+    }
+    else {
+        output_sym = _gbasis(args, 0);
+        output_vec = output_sym.ref_VECTptr(); 
+        n_output = output_vec->size();
+    }    
 
 #if 0
     cout << input_sym << endl;
@@ -92,10 +126,11 @@ int main(int argc,char**argv)
     cout << output_sym << endl;
 #endif
     
-    n_output = output_vec->size();
     printf("%d %d\n", nb_vars, n_output);
     for (p=0; p<n_output; p++) {
-        fraction ff = sym2r((*output_vec)[p], variables, 0);
+        fraction ff = greduce?
+             sym2r(output_sym, variables, 0) :
+             sym2r((*output_vec)[p], variables, 0);
         polynome *pp = ff.num.ref_POLYptr();
         nb_mons=pp->coord.size();
         printf("%d\n", nb_mons);
