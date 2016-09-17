@@ -126,7 +126,7 @@ int main(int argc,char**argv)
     cout << output_sym << endl;
 #endif
     
-    printf("%d %d\n", nb_vars, n_output);
+    printf("%d %d\n", nb_vars, n_output + (greduce?1:0) );
     for (p=0; p<n_output; p++) {
         fraction ff = greduce?
              sym2r(output_sym, variables, 0) :
@@ -153,6 +153,25 @@ int main(int argc,char**argv)
             }
             printf("\n");
         }    
+    }
+    if (greduce) {  // print denominator
+        printf("1\n");
+        for (v=0; v<nb_vars; v++) {
+            printf("0 ");
+        }    
+        fraction ff = sym2r(output_sym, variables, 0);
+        switch(ff.den.type) {
+            case _INT_:                    
+                 printf("%i", ff.den.val);
+                break;
+            case _ZINT:                     
+                mpz_out_str(stdout,10,
+                    *(ff.den.ref_ZINTptr()));
+                break;
+            default:
+                printf(" TYPE(%i)", int(ff.den.type));
+        }
+        printf("\n");
     }
 
 }

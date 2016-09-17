@@ -160,6 +160,7 @@ end
 
 function giac_greduce{K<:Field, N}(f::Polynomial{K,N}, G::Array{Polynomial{K,N},1}, vars::Vector) 
     (k, perm) = _adapt_vars_args(vars, [])
-    call_giac(vcat(f, G); perm=perm, greduce=true)[1]
+    r = call_giac(vcat(f, G); perm=perm, greduce=true)
+    r[1]/first(values(r[2]))
 end 
 
