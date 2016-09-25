@@ -1,13 +1,21 @@
 function _write_input{K<:Field, N}(si, F::Array{Polynomial{K,N},1}; perm=1:N)
     println(si, N, " ", length(F))
     for f in F
-        println(si, length(f))
-        h = lcm([den(c) for (i,c) in f])
-        for (i,c) in f
+        if length(f)==0 # print as if it is a constant term = 0
+            println(si, 1)
             for k=1:N
-                print(si, i[perm[k]], " ")
+                print(si, "0 ")
             end
-            println(si, num(c*h))
+            println(si, 0)
+        else
+            println(si, length(f))
+            h = lcm([den(c) for (i,c) in f])
+            for (i,c) in f
+                for k=1:N
+                    print(si, i[perm[k]], " ")
+                end
+                println(si, num(c*h))
+            end
         end
     end    
 end
