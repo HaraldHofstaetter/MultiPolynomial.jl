@@ -5,6 +5,7 @@ Base: (*), /, ^, +, -, <, >, rem, divrem, diff, isless, lexless, string, show, w
 
 export Field, Index, Term, Polynomial, PolyAsArray, @variables
 export terms, polynomial, coeff, deg, index, divides, evaluate
+export extract_univariate_polynomial, convert_base_field
 export grlexless, grevlexless
 export set_order_lex, set_order_grlex, set_order_grevlex
 export grevlexelimless, set_order_grevlexelimless
@@ -465,6 +466,33 @@ function diff{K<:Field,N}(f::Polynomial{K,N}, v::Term{K,N})
 end
 
 
+function convert_base_field{K<:Field, N}(K_new::DataType, p::Polynomial{K,N})
+    Polynomial{K_new,N}([(i, convert(K_new, c))  for (i,c) in p])
+end
+
+
+function extract_univariate_polynomial{K<:Field, N}(p::Polynomial{K,N})
+    t = terms(p)
+    d = deg(t)
+    up = zeros(K, d+1)
+    v = 0
+    for i = 1:length(t)
+        if v==0 && deg(t[i])>0
+            v = findfirst(t[i].index)            
+        end
+        if v>0
+            for j=1:N
+                if j!=v && t[i].index[j]!=0
+                    error("not a univariate polynomial")
+                end
+            end
+            up[t[i].index[v]+1] = t[i].coefficient
+        else
+            up[1] = t[i].coefficient
+        end
+    end
+    up
+end
 
 include("groebner_et_al.jl")
 include("interfaces.jl")
