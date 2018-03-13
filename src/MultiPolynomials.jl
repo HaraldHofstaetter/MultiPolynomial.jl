@@ -1,7 +1,7 @@
 module MultiPolynomials
 
 import 
-Base: (*), /, ^, +, -, <, >, rem, divrem, diff, isless, lexless, string, show, write, writemime
+Base: (*), /, ^, +, -, <, >, rem, divrem, diff, isless, lexless, string, show, write, convert, zero, one
 
 export Field, Index, Term, Polynomial, PolyAsArray, @variables
 export terms, polynomial, coeff, deg, index, divides, evaluate
@@ -15,18 +15,18 @@ export groebner_fgb, call_fgb
 export fgb_gbasis, fgb_gbasis_elim
 export call_giac, giac_gbasis, giac_greduce
 
-typealias Field Number
+const Field = Number
 
-typealias Index{N} NTuple{N, UInt16}
+Index{N} = NTuple{N,UInt16}
 
 immutable Term{K<:Field,N}
     index::Index{N}
     coefficient::K
 end
 
-typealias Polynomial{K<:Field, N} Dict{Index{N}, K}
+Polynomial{K<:Field,N} = Dict{Index{N},K}
 
-typealias PolyAsArray{K<:Field, N} Array{Term{K,N},1}
+PolyAsArray{K<:Field,N} = Array{Term{K,N},1}
 
 function polynomial{K<:Field, N}(terms::PolyAsArray{K, N})
     Polynomial{K, N}([(t.index, t.coefficient) for t in terms])
@@ -35,6 +35,12 @@ end
 function terms{K<:Field,N}(f::Polynomial{K, N})
     PolyAsArray{K,N}(Term{K,N}[Term{K,N}(key, value) for (key,value) in f])
 end
+
+convert{K<:Field,N}(::Type{Polynomial{K,N}}, t::Term{K,N}) = 
+    Polynomial{K,N}([(t.index, t.coefficient)])
+
+zero{K,N}(::Type{Polynomial{K,N}}) = Polynomial{K,N}([])
+one{K,N}(::Type{Polynomial{K,N}}) = Polynomial{K,N}([((zeros(K,N)...), 1)])
 
 deg(i::Index) = Int(sum(i))
 deg(t::Term) = deg(t.index)
@@ -384,33 +390,33 @@ end
 
 function _str{K<:Field,N}(f::Polynomial{K,N}; latex::Bool=false)
 #function _str(f::Polynomial; latex::Bool=false)
-    _str(terms(f), latex=latex)
-#    tt = terms(f)
-#    if length(tt)==0
-#        return "0"
-#    end
-#    s = ""
-#    f = false
-#    for t in tt
-#        if f && t.coefficient>0
-#            s = string(s, "+")
-#        end
-#        f = true
-#        s = string(s, _str(t, latex=latex))        
-#    end
-#    s    
+#    _str(terms(f), latex=latex)
+    tt = terms(f)
+    if length(tt)==0
+        return "0"
+    end
+    s = ""
+    f = false
+    for t in tt
+        if f && t.coefficient>0
+            s = string(s, "+")
+        end
+        f = true
+        s = string(s, _str(t, latex=latex))        
+    end
+    s    
 end
 
 function _str{T}(q::Rational{T}; latex::Bool=false)
     if latex
-        if den(q)==1
-            return string(num(q))
+        if denominator(q)==1
+            return string(numerator(q))
         end
         s = ""
-        if num(q)<0
+        if numerator(q)<0
             s = "-"
         end
-        return string(s, "\\frac{", abs(num(q)), "}{", den(q),"}")
+        return string(s, "\\frac{", abs(numerator(q)), "}{", denominator(q),"}")
     else 
         return string(q)
     end    
@@ -418,21 +424,23 @@ end
 
 string(t::Term) = _str(t)
 show(io::IO, t::Term) = print(io, _str(t))
-writemime(io::IO, ::MIME"application/x-latex", t::Term) = write(io, "\$", _str(t, latex=true), "\$")
-writemime(io::IO, ::MIME"text/latex",  t::Term) = write(io, "\$", _str(t, latex=true), "\$")
+#show(io::IO, ::MIME"application/x-latex", t::Term) = write(io, "\$", _str(t, latex=true), "\$")
+#show(io::IO, ::MIME"text/latex",  t::Term) = write(io, "\$", _str(t, latex=true), "\$")
 
 string{K<:Field,N}(tt::PolyAsArray{K,N}) = _str(tt)
 show{K<:Field,N}(io::IO, tt::PolyAsArray{K,N}) = print(io, _str(tt))
-writemime{K<:Field,N}(io::IO, ::MIME"application/x-latex", tt::PolyAsArray{K,N}) = write(io, "\$", _str(tt, latex=true), "\$")
-writemime{K<:Field,N}(io::IO, ::MIME"text/latex",  tt::PolyAsArray{K,N}) = write(io, "\$", _str(tt, latex=true), "\$")
+#show{K<:Field,N}(io::IO, ::MIME"application/x-latex", tt::PolyAsArray{K,N}) = write(io, "\$", _str(tt, latex=true), "\$")
+#show{K<:Field,N}(io::IO, ::MIME"text/latex",  tt::PolyAsArray{K,N}) = write(io, "\$", _str(tt, latex=true), "\$")
 
-string(f::Polynomial) = _str(f)
-show(io::IO, f::Polynomial) = print(io, _str(f))
-writemime(io::IO, ::MIME"application/x-latex", f::Polynomial) = write(io, "\$", _str(f, latex=true), "\$")
-writemime(io::IO, ::MIME"text/latex",  f::Polynomial) = write(io, "\$", _str(f, latex=true), "\$")
+#string(f::Polynomial) = _str(f)
+#show(io::IO, f::Polynomial) = print(io, _str(f))
+string{K<:Field,N}(f::Polynomial{K,N}) = _str(f)
+show{K<:Field,N}(io::IO, f::Polynomial{K,N}) = print(io, _str(f))
+#show(io::IO, ::MIME"application/x-latex", f::Polynomial) = write(io, "\$", _str(f, latex=true), "\$")
+#show(io::IO, ::MIME"text/latex",  f::Polynomial) = write(io, "\$", _str(f, latex=true), "\$")
 
-writemime(io::IO, ::MIME"application/x-latex", q::Rational) = write(io, "\$", _str(q, latex=true), "\$")
-writemime(io::IO, ::MIME"text/latex",  q::Rational) = write(io, "\$", _str(q, latex=true), "\$")
+#show(io::IO, ::MIME"application/x-latex", q::Rational) = write(io, "\$", _str(q, latex=true), "\$")
+#show(io::IO, ::MIME"text/latex",  q::Rational) = write(io, "\$", _str(q, latex=true), "\$")
 
 evaluate{K<:Field,N}(t::Term{K,N}, x) = t.coefficient * prod([x[k]^t.index[k] for k=1:N])
 evaluate{K<:Field,N}(f::Polynomial{K,N}, x) = sum([evaluate(t, x) for t in terms(f)])
